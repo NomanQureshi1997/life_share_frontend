@@ -1,166 +1,182 @@
 <template>
-  <v-row>
-    <v-col cols="12" md="4">
-      <dashboard-card-sales-by-countries @emergency="emergency"></dashboard-card-sales-by-countries>
-    </v-col>
-    <v-col cols="12" md="8">
-      <v-row>
-        <v-col cols="12">
-          <dashboard-statistics-card :Emergency="emergencyRequest"></dashboard-statistics-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" md="12" sm="6">
-          <v-card class="mx-auto" outlined>
-            <v-carousel hide-delimiters>
-              <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src"></v-carousel-item>
-            </v-carousel>
-          </v-card>
-        </v-col>
-        <!-- <v-col cols="12" md="6" sm="6">
-          <dashboard-card-total-earning></dashboard-card-total-earning>
-        </v-col> -->
-        <!-- <v-col cols="12" md="6">
-          <v-row class="match-height">
-            <v-col cols="12" sm="6">
-              <statistics-card-vertical
-                :change="totalProfit.change"
-                :color="totalProfit.color"
-                :icon="totalProfit.icon"
-                :statistics="totalProfit.statistics"
-                :stat-title="totalProfit.statTitle"
-                :subtitle="totalProfit.subtitle"
-              ></statistics-card-vertical>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <statistics-card-vertical
-                :change="totalSales.change"
-                :color="totalSales.color"
-                :icon="totalSales.icon"
-                :statistics="totalSales.statistics"
-                :stat-title="totalSales.statTitle"
-                :subtitle="totalSales.subtitle"
-              ></statistics-card-vertical>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <statistics-card-vertical
-                :change="newProject.change"
-                :color="newProject.color"
-                :icon="newProject.icon"
-                :statistics="newProject.statistics"
-                :stat-title="newProject.statTitle"
-                :subtitle="newProject.subtitle"
-              ></statistics-card-vertical>
-            </v-col>
-
-            <v-col cols="12" sm="6">
-              <statistics-card-vertical
-                :change="salesQueries.change"
-                :color="salesQueries.color"
-                :icon="salesQueries.icon"
-                :statistics="salesQueries.statistics"
-                :stat-title="salesQueries.statTitle"
-                :subtitle="salesQueries.subtitle"
-              ></statistics-card-vertical>
-            </v-col> -->
-      </v-row>
-    </v-col>
-  </v-row>
+  <div>
+    <v-row>
+      <v-col cols="12">
+         <date-picker style="margin-top: 0px;" @getData="callApis($event)"></date-picker>
+      </v-col>
+      <v-col cols="3" sm="3">
+        <emergancy-statistics-card-vertical
+          :color="Request.color"
+          :icon="Request.icon"
+          :statistics="emergencyCount"
+          :stat-title="Request.statTitle"
+        ></emergancy-statistics-card-vertical>
+      </v-col>
+      <v-col cols="3" sm="3">
+        <emergancy-statistics-card-vertical
+          :color="totalDonors.color"
+          :icon="totalDonors.icon"
+          :statistics="donorsCount"
+          :stat-title="totalDonors.statTitle"
+        ></emergancy-statistics-card-vertical>
+      </v-col>
+      <v-col cols="3" sm="3">
+        <emergancy-statistics-card-vertical
+          :color="bloodBags.color"
+          :icon="bloodBags.icon"
+          :statistics="bloodBags.statistics"
+          :stat-title="bloodBags.statTitle"
+        ></emergancy-statistics-card-vertical>
+      </v-col>
+      <v-col cols="3" sm="3">
+        <emergancy-statistics-card-vertical
+          :color="bloodRequest.color"
+          :icon="bloodRequest.icon"
+          :statistics="bloodCount"
+          :stat-title="bloodRequest.statTitle"
+        ></emergancy-statistics-card-vertical>
+      </v-col>
+      <v-col cols="4" md="4">
+        <EmergencyPanel :request="emergencyRequests" :title="'Emergency Request'"></EmergencyPanel>
+      </v-col>
+      <v-col cols="4" md="4">
+        <BloodRequest :request="bloodRequests" :title="'Blood Request'"/>
+      </v-col>
+      <v-col cols="4" md="4">
+        <request-chart></request-chart>
+      </v-col>
+      <v-col cols="12" md="12">
+        <!-- <growing-org-chart></growing-org-chart> -->
+       
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
-// eslint-disable-next-line object-curly-newline
-import { mdiPoll, mdiLabelVariantOutline, mdiCurrencyUsd, mdiHelpCircleOutline } from '@mdi/js'
-import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
+import EmergancyStatisticsCardVertical from '@/components/statistics-card/EmergancyStatisticsCardVertical.vue'
+import { mdiAccountOutline, mdiBloodBag, mdiAlarmLightOutline } from '@mdi/js'
 
-// demos
-import DashboardCongratulationJohn from './DashboardCongratulationJohn.vue'
-import DashboardStatisticsCard from './DashboardStatisticsCard.vue'
-import DashboardCardTotalEarning from './DashboardCardTotalEarning.vue'
-import DashboardCardSalesByCountries from './DashboardCardSalesByCountries.vue'
-import DashboardWeeklyOverview from './DashboardWeeklyOverview.vue'
-import DashboardDatatable from './DashboardDatatable.vue'
+import EmergencyPanel from './Emergency-Panel.vue'
+import DatePicker from '@/components/DatePicker.vue'
+import GrowingOrgChart from './GrowingOrgChart.vue'
+import RequestChart from './RequestChart.vue'
+import BloodRequest from './BloodRequest.vue'
+
 
 export default {
   components: {
-    StatisticsCardVertical,
-    DashboardCongratulationJohn,
-    DashboardStatisticsCard,
-    DashboardCardTotalEarning,
-    DashboardCardSalesByCountries,
-    DashboardWeeklyOverview,
-    DashboardDatatable,
+    EmergancyStatisticsCardVertical,
+    EmergencyPanel,
+    DatePicker,
+    RequestChart,
+    BloodRequest,
   },
   data() {
     return {
-      emergencyRequest: 0,
-      items: [
-        {
-          src:
-            'https://images.thequint.com/thequint%2F2015-08%2F31e98f8a-7aab-4978-9f9d-fb45539773b2%2FUntitled%20Infographic%20(54).jpeg?rect=0%2C0%2C1600%2C900',
-        },
-        {
-          src:
-            'https://newspakistanenglish.s3.ap-south-1.amazonaws.com/wp-content/uploads/2019/06/World-Blood-Donor-Day.png',
-        },
-        {
-          src: 'https://www.lnh.edu.pk/Bluetheme/images/services-img/bloodbank.JPG',
-        },
-        {
-          src: 'https://www.alliedmarketresearch.com/assets/sampleimages/blood-bank-market-2020-2027-1588761176.jpeg',
-        },
-      ],
+      emergencyCount: 0,
+      bloodCount: 0,
+      emergencyRequests: [],
+      bloodRequests: [],
+      donorsCount: 0,
+      chartOptions: {
+        series: [
+          {
+            data: [1, 2, 3], // sample data
+          },
+        ],
+      },
     }
-  },
-  methods: {
-    emergency(e) {
-      this.emergencyRequest = e
-    },
   },
   setup() {
-    const totalProfit = {
-      statTitle: 'Total Profit',
-      icon: mdiPoll,
+    const Request = {
+      statTitle: 'Emergency Request',
+      icon: mdiAlarmLightOutline,
+      color: 'warning',
+    }
+
+    const totalDonors = {
+      statTitle: 'Donors',
+      icon: mdiAccountOutline,
       color: 'success',
-      subtitle: 'Weekly Project',
-      statistics: '$25.6k',
-      change: '+42%',
+      statistics: 78,
     }
 
-    const totalSales = {
-      statTitle: 'Refunds',
-      icon: mdiCurrencyUsd,
-      color: 'secondary',
-      subtitle: 'Past Month',
-      statistics: '$78',
-      change: '-15%',
-    }
-
-    // vertical card options
-    const newProject = {
-      statTitle: 'New Project',
-      icon: mdiLabelVariantOutline,
+    const bloodBags = {
+      statTitle: 'Blood bags',
+      icon: mdiBloodBag,
       color: 'primary',
       subtitle: 'Yearly Project',
-      statistics: '862',
-      change: '-18%',
+      statistics: 862,
     }
 
-    const salesQueries = {
-      statTitle: 'Sales Quries',
-      icon: mdiHelpCircleOutline,
+    const bloodRequest = {
+      statTitle: 'Blood Request',
+      icon: mdiAlarmLightOutline,
       color: 'warning',
       subtitle: 'Last week',
-      statistics: '15',
-      change: '-18%',
+      statistics: 15,
     }
-
     return {
-      totalProfit,
-      totalSales,
-      newProject,
-      salesQueries,
+      Request,
+      totalDonors,
+      bloodBags,
+      bloodRequest,
     }
+  },
+  mounted() {
+    // this.request()
+    // this.interval = setInterval(() => {
+    this.EmergencyRequests()
+    this.BloodRequests()
+    //   this.input = null
+    // }, 10000)
+  },
+  methods: {
+    EmergencyRequests() {
+      this.$http
+        .get('/get-emergency-request', {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'), //the token is a variable which holds the token
+          },
+        })
+        .then(res => {
+          this.emergencyRequests = res.data.emergencyRequest
+          this.donorsCount = res.data.donorCount
+          this.emergencyCount = res.data.emergencyRequest.length
+        })
+        .catch(error => {
+          console.error('error', error)
+        })
+    },
+    BloodRequests() {
+      this.$http
+        .get('/get-blood-request', {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'), //the token is a variable which holds the token
+          },
+        })
+        .then(res => {
+          this.bloodRequests = res.data
+          console.log(res)
+          this.bloodCount = res.data.length
+        })
+        .catch(error => {
+          console.error('error', error)
+        })
+    },
+    callApis(event) {
+      console.log(event)
+    },
+  },
+  beforeDestroy() {
+    clearInterval(this.interval)
+    console.log('beforeDestroy')
   },
 }
 </script>
+<style scoped>
+.v-application .justify-center {
+  justify-content: right !important;
+}
+</style>

@@ -7,12 +7,15 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
 import store from './store'
+import HighchartsVue from "highcharts-vue";
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
-// axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
+Vue.use(HighchartsVue);
+
+axios.defaults.baseURL = 'http://192.168.53.101:8000/api'
 // axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'https://lifesharebackend.herokuapp.com/api'
+// axios.defaults.baseURL = 'https://lifesharebackend.herokuapp.com/api'
 new Vue({
   router,
   store,

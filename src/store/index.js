@@ -1,7 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+
 Vue.use(Vuex)
+
+// const vuexLocalStorage = new VuexPersist({
+//   key: 'vuex',
+//   storage: window.localStorage, 
+// })
+
 
 export default new Vuex.Store({
   state: {
@@ -29,4 +36,5 @@ export default new Vuex.Store({
       return state.Emergency
     },
   },
+  // plugins: [vuexLocalStorage.plugin]
 })

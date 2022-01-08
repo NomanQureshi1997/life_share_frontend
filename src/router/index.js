@@ -37,6 +37,20 @@ const routes = [
         },
   },
   {
+    path: '/blood-bank',
+    name: 'blood-bank',
+    component: () => import(/* webpackChunkName: "Instructions" */ '@/views/Donor-Table/BloodBank.vue'),
+    beforeEnter: (to, from, next) => {
+      let r = localStorage.getItem("token");
+      if (r) {
+          console.log(r);
+          next(true);
+        } else {
+            next({ name: "login" });
+          }
+        },
+  },
+  {
     path: '/icons',
     name: 'icons',
     component: () => import('@/views/icons/Icons.vue'),
@@ -57,7 +71,7 @@ const routes = [
   //   component: () => import('@/views/form-layouts/FormLayouts.vue'),
   // },
   {
-    path: '/pages/account-settings',
+    path: '/account-settings',
     name: 'pages-account-settings',
     component: () => import('@/views/pages/account-settings/AccountSettings.vue'),
     beforeEnter: (to, from, next) => {

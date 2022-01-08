@@ -41,21 +41,15 @@
     <v-list expand shaped class="vertical-nav-menu-items pr-5">
       <nav-menu-link title="Dashboard" :to="{ name: 'dashboard' }" :icon="icons.mdiHomeOutline" v-if="Auth !== null"></nav-menu-link>
       <nav-menu-link title="Donor" :to="{ name: 'donors' }" :icon="icons.mdiAccountCircleOutline" v-if="Auth !== null"></nav-menu-link>
-
-      <!-- <nav-menu-group title="Pages" :icon="icons.mdiFileOutline">
-        <nav-menu-link title="Login" :to="{ name: 'pages-login' }" target="_blank"></nav-menu-link>
-        <nav-menu-link title="Register" :to="{ name: 'pages-register' }" target="_blank"></nav-menu-link>
-        <nav-menu-link title="Error" :to="{ name: 'error-404' }" target="_blank"></nav-menu-link>
-      </nav-menu-group> -->
+      <nav-menu-link title="Blood Bank" :to="{ name: 'blood-bank' }" :icon="icons.mdiAccountCircleOutline" v-if="Auth !== null"></nav-menu-link>
       <nav-menu-section-title title="USER INTERFACE" v-if="Auth !== null"></nav-menu-section-title>
-      <!-- <nav-menu-link title="Icons" :to="{ name: 'icons' }" :icon="icons.mdiEyeOutline"></nav-menu-link> -->
       <nav-menu-link title="News Feed" :to="{ name: 'newsfeed' }" :icon="icons.mdiCreditCardOutline"></nav-menu-link>
-      <!-- <nav-menu-link
+      <nav-menu-link
         title="Account Settings"
         :to="{ name: 'pages-account-settings' }"
         :icon="icons.mdiAccountCogOutline"
         v-if="Auth == 'true'"
-      ></nav-menu-link> -->
+      ></nav-menu-link>
       <!-- <nav-menu-link title="Tables" :to="{ name: 'simple-table' }" :icon="icons.mdiTable"></nav-menu-link>
       <nav-menu-link title="Form Layouts" :to="{ name: 'form-layouts' }" :icon="icons.mdiFormSelect"></nav-menu-link> -->
     </v-list>

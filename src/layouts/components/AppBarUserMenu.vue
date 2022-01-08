@@ -21,96 +21,21 @@
           <small class="text--disabled text-capitalize">{{ UserName }}</small>
         </div>
       </div>
-
-      <!-- <v-divider></v-divider> -->
-
-      <!-- Profile -->
-      <!-- <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiAccountOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Profile</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item> -->
-
-      <!-- Email -->
-      <!-- <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiEmailOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Inbox</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item> -->
-
-      <!-- Chat -->
-      <!-- <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiChatOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Chat</v-list-item-title>
-        </v-list-item-content> -->
-
-      <!-- <v-list-item-action>
-          <v-badge
-            inline
-            color="error"
-            content="2"
-          >
-          </v-badge>
-        </v-list-item-action>
-      </v-list-item> -->
-
-      <!-- <v-divider class="my-2"></v-divider> -->
-
+     
       <!-- Settings -->
-      <!-- <router-link to="/pages/account-settings" style="text-decoration: none">
-      <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiCogOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title >Settings</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      </router-link> -->
-      <!-- Pricing -->
-      <!-- <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiCurrencyUsd }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Pricing</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item> -->
+      <router-link to="/account-settings" style="text-decoration: none">
+        <v-list-item link>
+          <v-list-item-icon class="me-2">
+            <v-icon size="22">
+              {{ icons.mdiCogOutline }}
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Settings</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </router-link>
 
-      <!-- FAQ -->
-      <!-- <v-list-item link>
-        <v-list-item-icon class="me-2">
-          <v-icon size="22">
-            {{ icons.mdiHelpCircleOutline }}
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>FAQ</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item> -->
-
-      <!-- <v-divider class="my-2"></v-divider> -->
-
-      <!-- Logout -->
       <v-list-item link>
         <v-list-item-icon class="me-2">
           <v-icon size="22">
@@ -158,11 +83,15 @@ export default {
   methods: {
     logOut() {
       axios
-        .post('/sign-out', {},{
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'), //the token is a variable which holds the token
+        .post(
+          '/sign-out',
+          {},
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'), //the token is a variable which holds the token
+            },
           },
-        })
+        )
         .then(res => {
           console.log(res)
           localStorage.removeItem('token')
@@ -170,7 +99,10 @@ export default {
         })
         .catch(error => {
           console.error('error', error)
+          localStorage.removeItem('token')
+          this.$router.push('/login')
         })
+      localStorage.removeItem('token')
     },
   },
 }

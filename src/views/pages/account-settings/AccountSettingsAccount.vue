@@ -5,60 +5,26 @@
   >
     <v-card-text class="d-flex">
       <v-avatar
-        rounded
-        size="120"
+        
+        size="80"
         class="me-6"
+        color="primary"
       >
-        <v-img :src="accountDataLocale.avatarImg"></v-img>
+        <span class="white--text text-h5">{{avatarText}}</span>
       </v-avatar>
-
-      <!-- upload photo -->
       <div>
-        <v-btn
-          color="primary"
-          class="me-3 mt-5"
-          @click="$refs.refInputEl.click()"
-        >
-          <v-icon class="d-sm-none">
-            {{ icons.mdiCloudUploadOutline }}
-          </v-icon>
-          <span class="d-none d-sm-block " style="color: white">Upload new photo</span>
-        </v-btn>
-
-        <input
-          ref="refInputEl"
-          type="file"
-          accept=".jpeg,.png,.jpg,GIF"
-          :hidden="true"
-        />
-
-        <v-btn
-          color="error"
-          outlined
-          class="mt-5"
-        >
-          Reset
-        </v-btn>
-        <p class="text-sm mt-5">
-          Allowed JPG, GIF or PNG. Max size of 800K
+     <p class="text-sm mt-3">
+          {{accountDataLocale.name}}
+        </p>
+        <p class="text-sm ">
+          {{accountDataLocale.email}}
         </p>
       </div>
     </v-card-text>
 
     <v-card-text>
-      <v-form class="multi-col-validation mt-6">
+      <v-form class="multi-col-validation mt-6" ref="form">
         <v-row>
-          <v-col
-            md="6"
-            cols="12"
-          >
-            <v-text-field
-              v-model="accountDataLocale.username"
-              label="Username"
-              dense
-              outlined
-            ></v-text-field>
-          </v-col>
 
           <v-col
             md="6"
@@ -67,6 +33,8 @@
             <v-text-field
               v-model="accountDataLocale.name"
               label="Name"
+              :rules="[() => !!accountDataLocale.name || 'This field is required',
+              () => (accountDataLocale.name).length >= 3 || 'Password must be 3 characters']"
               dense
               outlined
             ></v-text-field>
@@ -78,92 +46,22 @@
           >
             <v-text-field
               v-model="accountDataLocale.email"
+              readonly
               label="E-mail"
               dense
               outlined
             ></v-text-field>
           </v-col>
 
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="accountDataLocale.role"
-              dense
-              label="Role"
-              outlined
-            ></v-text-field>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-select
-              v-model="accountDataLocale.status"
-              dense
-              outlined
-              label="Status"
-              :items="status"
-            ></v-select>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="accountDataLocale.company"
-              dense
-              outlined
-              label="Company"
-            ></v-text-field>
-          </v-col>
-
-          <!-- alert -->
-          <v-col cols="12">
-            <v-alert
-              color="warning"
-              text
-              class="mb-0"
-            >
-              <div class="d-flex align-start">
-                <v-icon color="warning">
-                  {{ icons.mdiAlertOutline }}
-                </v-icon>
-
-                <div class="ms-3">
-                  <p class="text-base font-weight-medium mb-1">
-                    Your email is not confirmed. Please check your inbox.
-                  </p>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-decoration-none warning--text"
-                  >
-                    <span class="text-sm">Resend Confirmation</span>
-                  </a>
-                </div>
-              </div>
-            </v-alert>
-          </v-col>
-
           <v-col cols="12">
             <v-btn
               color="primary"
               class="me-3 mt-4"
+              @click="$refs.form.validate() ? $emit('update',accountDataLocale.name ) : $refs.form.validate(true)"
             >
               Save changes
             </v-btn>
-            <v-btn
-              color="secondary"
-              outlined
-              class="mt-4"
-              type="reset"
-              @click.prevent="resetForm"
-            >
-              Cancel
-            </v-btn>
+           
           </v-col>
         </v-row>
       </v-form>
@@ -201,5 +99,22 @@ export default {
       },
     }
   },
+  computed:{
+    avatarText(){
+      let arr = (this.accountData.name).split(' ')
+      console.log(arr.length)
+      if(arr.length>1){
+         console.log(arr)
+        return arr[0].charAt(0) + arr[1].charAt(0)
+      }else{
+        return arr[0].charAt(0)
+      }
+    }
+  },
 }
 </script>
+<style scoped>
+.v-application p {
+    margin-bottom: 5px;
+}
+</style>

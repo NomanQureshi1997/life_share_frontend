@@ -3,15 +3,21 @@
     <v-row>
       <!-- Influencing The Influencer -->
       <v-col md="4" sm="6" cols="12" v-for="news in News" :key="news.aurthor">
-        <v-card>
-          <v-img :src="news.urlToImage" height="250" />
-          <v-card-title>
-            {{ news.title }}
-          </v-card-title>
-          <v-card-text>
-            {{ news.description }}
-          </v-card-text>
-        </v-card>
+        <v-hover v-slot="{ hover }"
+        >
+          <v-card 
+          :elevation="hover ? 16 : 2"
+          :class="{ 'on-hover': hover }"
+          >
+            <v-img :src="news.urlToImage" height="250" />
+            <v-card-title>
+              {{ news.title }}
+            </v-card-title>
+            <v-card-text>
+              {{ news.description }}
+            </v-card-text>
+          </v-card>
+        </v-hover>
       </v-col>
     </v-row>
     <!-- <v-overlay :value="overlay">
@@ -403,29 +409,29 @@ export default {
   },
 
   methods: {
-    getNews() {
-      axios
-        .get(
-          'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=c5d2d6c9e91c43acbcc781a1241870eb',
-          { baseURL: '/' },
-          {
-            params: {
-              country: 'us',
-              category: 'health',
-              apiKey: 'c5d2d6c9e91c43acbcc781a1241870eb',
-            },
-          },
-        )
-        .then(res => {
-          //  console.log(res)
-          this.News = res.data.articles
-          this.overlay = false
-        })
-        .catch(error => {
-          console.error('error', error)
-          this.overlay = false
-        })
-    },
+    // getNews() {
+    //   axios
+    //     .get(
+    //       'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=c5d2d6c9e91c43acbcc781a1241870eb',
+    //       { baseURL: '/' },
+    //       {
+    //         params: {
+    //           country: 'us',
+    //           category: 'health',
+    //           apiKey: 'c5d2d6c9e91c43acbcc781a1241870eb',
+    //         },
+    //       },
+    //     )
+    //     .then(res => {
+    //       //  console.log(res)
+    //       this.News = res.data.articles
+    //       this.overlay = false
+    //     })
+    //     .catch(error => {
+    //       console.error('error', error)
+    //       this.overlay = false
+    //     })
+    // },
   },
 }
 </script>

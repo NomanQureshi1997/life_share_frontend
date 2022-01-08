@@ -1,22 +1,17 @@
 <template>
-  <v-card
-    flat
-    class="mt-5"
-  >
-    <v-form>
+  <v-card flat class="mt-5">
+    <v-form ref="form">
       <div class="px-3">
         <v-card-text class="pt-5">
           <v-row>
-            <v-col
-              cols="12"
-              sm="8"
-              md="6"
-            >
+            <v-col cols="12" sm="8" md="6" class="py-2">
               <!-- current password -->
               <v-text-field
                 v-model="currentPassword"
+                :rules="[() => !!currentPassword || 'This field is required',
+                () => currentPassword.length >= 8 || 'Password must be 8 characters' ]"
                 :type="isCurrentPasswordVisible ? 'text' : 'password'"
-                :append-icon="isCurrentPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
+                :append-icon="isCurrentPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
                 label="Current Password"
                 outlined
                 dense
@@ -27,7 +22,9 @@
               <v-text-field
                 v-model="newPassword"
                 :type="isNewPasswordVisible ? 'text' : 'password'"
-                :append-icon="isNewPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
+                :rules="[() => !!newPassword || 'This field is required',
+                 () => newPassword.length >= 8 || 'Password must be 8 characters']"
+                :append-icon="isNewPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
                 label="New Password"
                 outlined
                 dense
@@ -38,29 +35,18 @@
 
               <!-- confirm password -->
               <v-text-field
-                v-model="cPassword"
+                v-model="cNewPassword"
                 :type="isCPasswordVisible ? 'text' : 'password'"
-                :append-icon="isCPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
+                :append-icon="isCPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
                 label="Confirm New Password"
+                :rules="[() => cNewPassword == newPassword|| 'Password does not match',
+                () => !!cNewPassword || 'This field is required',
+                () => cNewPassword.length >= 8 || 'Password must be 8 characters']"
                 outlined
                 dense
                 class="mt-3"
                 @click:append="isCPasswordVisible = !isCPasswordVisible"
               ></v-text-field>
-            </v-col>
-
-            <v-col
-              cols="12"
-              sm="4"
-              md="6"
-              class="d-none d-sm-flex justify-center position-relative"
-            >
-              <!-- <v-img
-                contain
-                max-width="170"
-                src="@/assets/images/3d-characters/pose-m-1.png"
-                class="security-character"
-              ></v-img> -->
             </v-col>
           </v-row>
         </v-card-text>
@@ -70,54 +56,19 @@
       <v-divider></v-divider>
 
       <div class="pa-3">
-        <v-card-title class="flex-nowrap">
-          <v-icon class="text--primary me-3">
-            {{ icons.mdiKeyOutline }}
-          </v-icon>
-          <span class="text-break">Two-factor authentication</span>
-        </v-card-title>
-
-        <v-card-text class="two-factor-auth text-center mx-auto">
-          <v-avatar
-            color="primary"
-            class="primary mb-4"
-            rounded
-          >
-            <v-icon
-              size="25"
-              color="white"
-            >
-              {{ icons.mdiLockOpenOutline }}
-            </v-icon>
-          </v-avatar>
-          <p class="text-base text--primary font-weight-semibold">
-            Two factor authentication is not enabled yet.
-          </p>
-          <p class="text-sm text--primary">
-            Two-factor authentication adds an additional layer of
-            security to your account by requiring more than just a
-            password to log in. Learn more.
-          </p>
-        </v-card-text>
-
-        <!-- action buttons -->
         <v-card-text>
-          <v-btn
-            color="primary"
-            class="me-3 mt-3"
-          >
+          <v-btn color="primary" class="me-3 mt-3" @click="update()">
             Save changes
-          </v-btn>
-          <v-btn
-            color="secondary"
-            outlined
-            class="mt-3"
-          >
-            Cancel
           </v-btn>
         </v-card-text>
       </div>
     </v-form>
+    <snack-bar
+      :success="snackBarSuccess"
+      :successMesg="snackBarSuccessM"
+      :error="snackBarError"
+      :errorMesg="snackBarErrorM"
+    ></snack-bar>
   </v-card>
 </template>
 
@@ -125,23 +76,21 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiKeyOutline, mdiLockOpenOutline, mdiEyeOffOutline, mdiEyeOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
-
+import axios from 'axios'
+import SnackBar from '@/components/SnackBar.vue'
 export default {
+   components: {
+    SnackBar,
+  },
   setup() {
     const isCurrentPasswordVisible = ref(false)
     const isNewPasswordVisible = ref(false)
     const isCPasswordVisible = ref(false)
-    const currentPassword = ref('12345678')
-    const newPassword = ref('87654321')
-    const cPassword = ref('87654321')
 
     return {
       isCurrentPasswordVisible,
       isNewPasswordVisible,
-      currentPassword,
       isCPasswordVisible,
-      newPassword,
-      cPassword,
       icons: {
         mdiKeyOutline,
         mdiLockOpenOutline,
@@ -149,6 +98,58 @@ export default {
         mdiEyeOutline,
       },
     }
+  },
+  data() {
+    return {
+      currentPassword: '',
+      newPassword: '',
+      cNewPassword: '',
+      snackBarSuccess: {
+        key: false,
+      },
+      snackBarError: {
+        key: false,
+      },
+      snackBarSuccessM: {
+        key: '',
+      },
+      snackBarErrorM: {
+        key: '',
+      },
+    }
+  },
+   methods: {
+    update(userName) {
+      if(this.$refs.form.validate()){
+      axios
+        .post(
+          '/password-update',
+          {
+            currentPassword: this.currentPassword,
+            password: this.newPassword,
+            password_confirmation: this.cNewPassword 
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'), //the token is a variable which holds the token
+            },
+          },
+        )
+        .then(res => {
+          console.log(res.data)
+          localStorage.setItem('userName', userName)
+          this.snackBarSuccess.key = true
+          this.snackBarSuccessM.key = 'Updated successfuly'
+        })
+        .catch(error => {
+          console.error('error', error.response.data.errors)
+          this.snackBarError.key = true
+          this.snackBarErrorM.key = error.response.data
+        })
+      }else{
+        this.$refs.form.validate(true)
+      }
+    },
   },
 }
 </script>
