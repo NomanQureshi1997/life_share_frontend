@@ -32,12 +32,6 @@
       <div class="boxed-container w-full">
         <div class="mx-6 d-flex justify-space-between">
           <span class="d-sm-inline d-none">
-            <a
-              href=""
-              target="_blank"
-              class="me-6 text--secondary text-decoration-none"
-              >Freebies</a
-            >
             <a href="" target="_blank" class="me-6 text--secondary text-decoration-none"
               >Blog</a
             >

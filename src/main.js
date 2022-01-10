@@ -13,9 +13,25 @@ Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 Vue.use(HighchartsVue);
 
-axios.defaults.baseURL = 'http://192.168.53.101:8000/api'
+axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 // axios.defaults.withCredentials = true;
 // axios.defaults.baseURL = 'https://lifesharebackend.herokuapp.com/api'
+
+
+axios.interceptors.response.use(function (response) {
+  console.log(response, 'config')
+  return response;
+}, function (error) {
+  if(error.response.status == 401){
+    localStorage.removeItem('token')
+    localStorage.removeItem('CurrentUserEmail')
+    localStorage.removeItem('userName')
+    router.push('login') 
+  }
+  console.log(error.response.status, 'error')
+  return Promise.reject(error);
+});
+
 new Vue({
   router,
   store,

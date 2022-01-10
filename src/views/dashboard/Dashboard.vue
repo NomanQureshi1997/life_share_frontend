@@ -43,7 +43,7 @@
         <BloodRequest :request="bloodRequests" :title="'Blood Request'"/>
       </v-col>
       <v-col cols="4" md="4">
-        <request-chart></request-chart>
+        <request-chart ref="barChart" :emergencyCount="emergencyCount" :bloodCount="bloodCount"></request-chart>
       </v-col>
       <v-col cols="12" md="12">
         <!-- <growing-org-chart></growing-org-chart> -->
@@ -79,13 +79,6 @@ export default {
       emergencyRequests: [],
       bloodRequests: [],
       donorsCount: 0,
-      chartOptions: {
-        series: [
-          {
-            data: [1, 2, 3], // sample data
-          },
-        ],
-      },
     }
   },
   setup() {
@@ -125,17 +118,21 @@ export default {
     }
   },
   mounted() {
+    // this.$refs.barChart.setSeries(this.emergencyCount, this.bloodCount);
     // this.request()
     // this.interval = setInterval(() => {
-    this.EmergencyRequests()
-    this.BloodRequests()
+    // this.EmergencyRequests()
+    // this.BloodRequests()
     //   this.input = null
     // }, 10000)
   },
   methods: {
-    EmergencyRequests() {
+    EmergencyRequests(date) {
       this.$http
         .get('/get-emergency-request', {
+          params:{
+            date: date
+          },
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token'), //the token is a variable which holds the token
           },
@@ -149,9 +146,12 @@ export default {
           console.error('error', error)
         })
     },
-    BloodRequests() {
+    BloodRequests(date) {
       this.$http
         .get('/get-blood-request', {
+          params:{
+            date: date
+          },
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token'), //the token is a variable which holds the token
           },
@@ -166,7 +166,8 @@ export default {
         })
     },
     callApis(event) {
-      console.log(event)
+      this.EmergencyRequests(event)
+      this.BloodRequests(event)
     },
   },
   beforeDestroy() {

@@ -8,7 +8,7 @@
       </v-card-title>
       <v-card
         style="overflow: scroll; 
-              height: 359px;
+              height: inherit;
               border-radius: 6px;"
       >
         <v-list two-line >
@@ -83,5 +83,8 @@ export default {
 <style scoped>
 ::v-deep .theme--light.v-list-item--active::before {
   opacity: 0 !important;
+}
+::-webkit-scrollbar-track {
+    background: none !important;
 }
 </style>
