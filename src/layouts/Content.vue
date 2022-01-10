@@ -12,11 +12,6 @@
 
           <!-- Right Content -->
           <theme-switcher></theme-switcher>
-          <!-- <v-btn icon small class="ms-3">
-            <v-icon>
-              {{ icons.mdiBellOutline }}
-            </v-icon>
-          </v-btn> -->
           <app-bar-user-menu></app-bar-user-menu>
         </div>
       </div>

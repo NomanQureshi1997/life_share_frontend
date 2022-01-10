@@ -5,36 +5,36 @@
          <date-picker style="margin-top: 0px;" @getData="callApis($event)"></date-picker>
       </v-col>
       <v-col cols="3" sm="3">
-        <emergancy-statistics-card-vertical
+        <Cards
           :color="Request.color"
           :icon="Request.icon"
           :statistics="emergencyCount"
           :stat-title="Request.statTitle"
-        ></emergancy-statistics-card-vertical>
+        ></Cards>
       </v-col>
       <v-col cols="3" sm="3">
-        <emergancy-statistics-card-vertical
+        <Cards
           :color="totalDonors.color"
           :icon="totalDonors.icon"
           :statistics="donorsCount"
           :stat-title="totalDonors.statTitle"
-        ></emergancy-statistics-card-vertical>
+        ></Cards>
       </v-col>
       <v-col cols="3" sm="3">
-        <emergancy-statistics-card-vertical
+        <Cards
           :color="bloodBags.color"
           :icon="bloodBags.icon"
-          :statistics="bloodBags.statistics"
+          :statistics="bags"
           :stat-title="bloodBags.statTitle"
-        ></emergancy-statistics-card-vertical>
+        ></Cards>
       </v-col>
       <v-col cols="3" sm="3">
-        <emergancy-statistics-card-vertical
+        <Cards
           :color="bloodRequest.color"
           :icon="bloodRequest.icon"
           :statistics="bloodCount"
           :stat-title="bloodRequest.statTitle"
-        ></emergancy-statistics-card-vertical>
+        ></Cards>
       </v-col>
       <v-col cols="4" md="4">
         <EmergencyPanel :request="emergencyRequests" :title="'Emergency Request'"></EmergencyPanel>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import EmergancyStatisticsCardVertical from '@/components/statistics-card/EmergancyStatisticsCardVertical.vue'
+import Cards from '@/components/Dashboard-Cards/DashboardCards.vue'
 import { mdiAccountOutline, mdiBloodBag, mdiAlarmLightOutline } from '@mdi/js'
 
 import EmergencyPanel from './Emergency-Panel.vue'
@@ -66,7 +66,7 @@ import BloodRequest from './BloodRequest.vue'
 
 export default {
   components: {
-    EmergancyStatisticsCardVertical,
+    Cards,
     EmergencyPanel,
     DatePicker,
     RequestChart,
@@ -79,6 +79,7 @@ export default {
       emergencyRequests: [],
       bloodRequests: [],
       donorsCount: 0,
+      bags: 0,
     }
   },
   setup() {
@@ -100,7 +101,7 @@ export default {
       icon: mdiBloodBag,
       color: 'primary',
       subtitle: 'Yearly Project',
-      statistics: 862,
+      statistics: 0,
     }
 
     const bloodRequest = {
@@ -141,6 +142,7 @@ export default {
           this.emergencyRequests = res.data.emergencyRequest
           this.donorsCount = res.data.donorCount
           this.emergencyCount = res.data.emergencyRequest.length
+          this.bags = res.data.bloodBags
         })
         .catch(error => {
           console.error('error', error)

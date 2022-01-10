@@ -11,15 +11,6 @@
     <!-- Navigation Header -->
     <div class="vertical-nav-header d-flex items-center ps-6 pe-5 pt-5 pb-2">
       <router-link to="/" class="d-flex align-center text-decoration-none">
-        <!-- <v-img
-          :src="require('@/assets/images/logos/logo.svg')"
-          max-height="30px"
-          max-width="30px"
-          alt="logo"
-          contain
-          eager
-          class="app-logo me-3"
-        ></v-img> -->
         <v-slide-x-transition>
           <v-row>
             <v-col cols="3">
@@ -40,9 +31,10 @@
     <!-- Navigation Items -->
     <v-list expand shaped class="vertical-nav-menu-items pr-5">
       <nav-menu-link title="Dashboard" :to="{ name: 'dashboard' }" :icon="icons.mdiHomeOutline" v-if="Auth !== null"></nav-menu-link>
-      <nav-menu-link title="Donor" :to="{ name: 'donors' }" :icon="icons.mdiAccountCircleOutline" v-if="Auth !== null"></nav-menu-link>
-      <nav-menu-link title="Blood Bank" :to="{ name: 'blood-bank' }" :icon="icons.mdiAccountCircleOutline" v-if="Auth !== null"></nav-menu-link>
-      <nav-menu-section-title title="USER INTERFACE" v-if="Auth !== null"></nav-menu-section-title>
+      <nav-menu-section-title title="REGISTER" v-if="Auth !== null"></nav-menu-section-title>
+      <nav-menu-link title="Donors" :to="{ name: 'donors' }" :icon="icons.mdiAccountCircleOutline" v-if="Auth !== null"></nav-menu-link>
+      <nav-menu-link title="Blood Bank" :to="{ name: 'blood-bank' }" :icon="icons.mdiBloodBag" v-if="Auth !== null"></nav-menu-link>
+      <nav-menu-section-title title="FEEDS" v-if="Auth !== null"></nav-menu-section-title>
       <nav-menu-link title="News Feed" :to="{ name: 'newsfeed' }" :icon="icons.mdiCreditCardOutline"></nav-menu-link>
       <nav-menu-link
         title="Account Settings"
@@ -50,25 +42,17 @@
         :icon="icons.mdiAccountCogOutline"
         v-if="Auth == 'true'"
       ></nav-menu-link>
-      <!-- <nav-menu-link title="Tables" :to="{ name: 'simple-table' }" :icon="icons.mdiTable"></nav-menu-link>
-      <nav-menu-link title="Form Layouts" :to="{ name: 'form-layouts' }" :icon="icons.mdiFormSelect"></nav-menu-link> -->
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script>
-// eslint-disable-next-line object-curly-newline
 import {
   mdiHomeOutline,
-  mdiAlphaTBoxOutline,
-  mdiEyeOutline,
   mdiCreditCardOutline,
-  mdiTable,
-  mdiFileOutline,
-  mdiFormSelect,
-  mdiAccountCogOutline,
   mdiHandHeart,
   mdiAccountCircleOutline,
+  mdiBloodBag
 } from '@mdi/js'
 import NavMenuSectionTitle from './components/NavMenuSectionTitle.vue'
 import NavMenuGroup from './components/NavMenuGroup.vue'
@@ -91,15 +75,10 @@ export default {
       Auth: localStorage.getItem('token'),
       icons: {
         mdiHomeOutline,
-        mdiAlphaTBoxOutline,
-        mdiEyeOutline,
         mdiCreditCardOutline,
-        mdiTable,
-        mdiFileOutline,
-        mdiFormSelect,
-        mdiAccountCogOutline,
         mdiHandHeart,
         mdiAccountCircleOutline,
+        mdiBloodBag
       },
     }
   },

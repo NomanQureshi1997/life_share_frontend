@@ -143,7 +143,7 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small v-if="item.is_accpeted == 0"  class="mr-2" @click="editItem(item)">
+        <v-icon small v-if="item.is_accpeted == 0" class="mr-2" @click="editItem(item)">
           {{ icons.mdiPencil }}
         </v-icon>
         <v-icon small @click="deleteItem(item)">
@@ -167,7 +167,7 @@
         </v-btn>
       </template>
     </v-snackbar>
-    <v-snackbar v-model="error" color="blue-grey" :timeout="1000">
+    <v-snackbar v-model="error" color="blue-grey" :timeout="3000">
       {{ errorText }}
     </v-snackbar>
   </div>
@@ -352,6 +352,8 @@ export default {
             )
             .then(res => {
               console.table(res.data)
+              this.snackbar = true
+              this.text = 'Blood bag updated successfuly'
               this.overlay = false
             })
             .catch(error => {
@@ -380,15 +382,18 @@ export default {
             .then(res => {
               this.getDonors()
               this.desserts.push(this.editedItem)
-              // console.log(res)
+              this.snackbar = true
+              this.text = 'Blood bag Added successfuly'
               this.overlay = false
             })
             .catch(error => {
+              this.errorText = error.response.data.errors.bag_id[0]
+              this.error = true
               this.overlay = false
-              console.error('error', error)
+              console.error('error', error.response.data.errors.bag_id[0])
             })
         }
-      this.close()
+        this.close()
       }
     },
   },
